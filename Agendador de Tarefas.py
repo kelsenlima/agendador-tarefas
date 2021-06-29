@@ -225,12 +225,12 @@ def removeTask(event=None):
 
 
 def about(event=None):
-    global FrameAjuda, AboutDisplayed
+    global FrameSobre, AboutDisplayed
     if not AboutDisplayed:
-        FrameAjuda.grid(row=7, column=0, columnspan=4, sticky="EW")
+        FrameSobre.grid(row=7, column=0, columnspan=4, sticky="EW")
         AboutDisplayed = True
     else:
-        FrameAjuda.grid_forget()
+        FrameSobre.grid_forget()
         AboutDisplayed = False
 
 
@@ -268,7 +268,7 @@ prog.title("Agendador de Tarefa" + " - " + title)
 
 menubar = tk.Menu(prog)
 filemenu = tk.Menu(menubar, tearoff=0)
-# filemenu.add_command(label="New", accelerator="Ctrl+N")
+# filemenu.add_command(label="Novo", accelerator="Ctrl+N")
 filemenu.add_command(label="Abrir", accelerator="Ctrl+O", command=openFile)
 filemenu.add_command(label="Salvar", accelerator="Ctrl+S", command=saveInFile)
 filemenu.add_command(label="Salvar como...", command=saveAs)
