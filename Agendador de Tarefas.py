@@ -10,7 +10,7 @@ from tkinter import messagebox as mb
 
 font = "Arial"
 tasks = []
-newTask = {"title": "", "description": "", "start": None, "end": None}
+newTask = {"titulo": "", "descricao": "", "inicial": None, "final": None}
 currFile = None
 changed = False
 title = "TaskPlanner"
@@ -36,22 +36,22 @@ def save(event=None):
     else:
         sv.set("")
         task = {}
-        task["title"] = titre.get()
-        task["description"] = get_desc()
-        task["start"] = str(dated.get_date())
-        task["end"] = str(datef.get_date())
+        task["titulo"] = titre.get()
+        task["descricao"] = get_desc()
+        task["inicial"] = str(dated.get_date())
+        task["final"] = str(datef.get_date())
         act = listbox.get(listbox.curselection())
         # print(act)
         if act == "+":
             listbox.delete(len(tasks))
-            listbox.insert(tk.END, str(len(tasks) + 1) + "- " + task["title"])
+            listbox.insert(tk.END, str(len(tasks) + 1) + "- " + task["titulo"])
             tasks.append(task)
             listbox.insert(tk.END, "+")
             listbox.select_set(len(tasks) - 1)
         else:
             index = int(act.split("-")[0])
             listbox.delete(index - 1)
-            listbox.insert(index - 1, str(index) + "- " + task["title"])
+            listbox.insert(index - 1, str(index) + "- " + task["titulo"])
             tasks[index - 1] = task
             # listbox.insert(tk.END, "+")
             listbox.select_set(index - 1)
@@ -106,20 +106,20 @@ def openFile(event=None):
         currFile = filename
         listbox.delete(0, tk.END)
         for i, item in enumerate(tasks):
-            listbox.insert(tk.END, str(i + 1) + "- " + item["title"])
+            listbox.insert(tk.END, str(i + 1) + "- " + item["titulo"])
         listbox.insert(tk.END, "+")
         listbox.select_set(0)
         if len(tasks) > 0:
-            svt.set(tasks[0]["title"])
-            desc.delete(1.0, "end")
-            desc.insert(1.0, tasks[0]["description"])
-            dated.set_date(date.fromisoformat(tasks[0]["start"]))
-            datef.set_date(date.fromisoformat(tasks[0]["end"]))
+            svt.set(tasks[0]["titulo"])
+            desc.delete(1.0, "final")
+            desc.insert(1.0, tasks[0]["descricao"])
+            dated.set_date(date.fromisoformat(tasks[0]["inicial"]))
+            datef.set_date(date.fromisoformat(tasks[0]["final"]))
             filemenu.entryconfigure(3, state="normal")
             B2["state"] = "normal"
         else:
             svt.set("")
-            desc.delete(1.0, "end")
+            desc.delete(1.0, "final")
             dated.set_date(date.today())
             datef.set_date(date.today())
             filemenu.entryconfigure(3, state="normal")
@@ -133,9 +133,9 @@ def onselect(event=None):
         return
     curr = listbox.get(listbox.curselection())
     if curr == "+":
-        svt.set(newTask["title"])
-        desc.delete(1.0, "end")
-        desc.insert(1.0, newTask["description"])
+        svt.set(newTask["titulo"])
+        desc.delete(1.0, "final")
+        desc.insert(1.0, newTask["descricao"])
         dated.set_date(date.today())
         datef.set_date(date.today())
         B2["state"] = "disabled"
@@ -143,17 +143,17 @@ def onselect(event=None):
         index = int(curr.split("-")[0]) - 1
         B2["state"] = "normal"
         if index < len(tasks):
-            svt.set(tasks[index]["title"])
-            desc.delete(1.0, "end")
-            desc.insert(1.0, tasks[index]["description"])
-            dated.set_date(date.fromisoformat(tasks[index]["start"]))
-            datef.set_date(date.fromisoformat(tasks[index]["end"]))
+            svt.set(tasks[index]["titulo"])
+            desc.delete(1.0, "final")
+            desc.insert(1.0, tasks[index]["descricao"])
+            dated.set_date(date.fromisoformat(tasks[index]["inicial"]))
+            datef.set_date(date.fromisoformat(tasks[index]["final"]))
 
 
 def up(event=None):
     c = listbox.curselection()[0]
     if c > 0:
-        listbox.selection_clear(0, 'end')
+        listbox.selection_clear(0, 'final')
         listbox.select_set(c - 1)
         onselect()
 
@@ -162,7 +162,7 @@ def down(event=None):
     global tasks
     c = listbox.curselection()[0]
     if c < len(tasks):
-        listbox.selection_clear(0, 'end')
+        listbox.selection_clear(0, 'final')
         listbox.select_set(c + 1)
         onselect()
 
@@ -171,7 +171,7 @@ def closeFile(event=None):
     global currFile, tasks, changed, title
 
     if changed:
-        answer = mb.askyesnocancel(title="Task - " + title, message="Deseja salvar as alterações no arquivo?")
+        answer = mb.askyesnocancel(title="Agendador de Tarefa - " + title, message="Deseja salvar as alterações no arquivo?")
         if answer == None:
             changed = False
             return
@@ -182,7 +182,7 @@ def closeFile(event=None):
     filemenu.entryconfigure(3, state="disabled")
     svt.set("")
     tasks = []
-    desc.delete(1.0, "end")
+    desc.delete(1.0, "final")
     listbox.delete(0, tk.END)
     listbox.insert(tk.END, "+")
     currFile = None
@@ -207,40 +207,40 @@ def removeTask(event=None):
     del tasks[index - 1]
     listbox.delete(0, tk.END)
     for i, item in enumerate(tasks):
-        listbox.insert(tk.END, str(i + 1) + "- " + item["title"])
+        listbox.insert(tk.END, str(i + 1) + "- " + item["titulo"])
     listbox.insert(tk.END, "+")
     listbox.select_set(index - 1)
     if index - 1 >= len(tasks):
         svt.set("")
-        desc.delete(1.0, "end")
+        desc.delete(1.0, "final")
         dated.set_date(date.today())
         datef.set_date(date.today())
         B2["state"] = "disabled"
     else:
-        svt.set(tasks[index - 1]["title"])
-        desc.delete(1.0, "end")
-        desc.insert(1.0, tasks[index - 1]["description"])
-        dated.set_date(date.fromisoformat(tasks[index - 1]["start"]))
-        datef.set_date(date.fromisoformat(tasks[index - 1]["end"]))
+        svt.set(tasks[index - 1]["titulo"])
+        desc.delete(1.0, "final")
+        desc.insert(1.0, tasks[index - 1]["descricao"])
+        dated.set_date(date.fromisoformat(tasks[index - 1]["inicial"]))
+        datef.set_date(date.fromisoformat(tasks[index - 1]["final"]))
 
 
 def about(event=None):
-    global AboutFrame, AboutDisplayed
+    global FrameAjuda, AboutDisplayed
     if not AboutDisplayed:
-        AboutFrame.grid(row=7, column=0, columnspan=4, sticky="EW")
+        FrameAjuda.grid(row=7, column=0, columnspan=4, sticky="EW")
         AboutDisplayed = True
     else:
-        AboutFrame.grid_forget()
+        FrameAjuda.grid_forget()
         AboutDisplayed = False
 
 
 def helpApp(event=None):
-    global HelpFrame, HelpDisplayed
+    global FrameAjuda, HelpDisplayed
     if not HelpDisplayed:
-        HelpFrame.grid(row=0, column=6, rowspan=6, sticky="NS")
+        FrameAjuda.grid(row=0, column=6, rowspan=6, sticky="NS")
         HelpDisplayed = True
     else:
-        HelpFrame.grid_forget()
+        FrameAjuda.grid_forget()
         HelpDisplayed = False
 
 
@@ -312,7 +312,7 @@ listbox.bind('<<ListboxSelect>>', onselect)
 listbox.bind('<FocusIn>', lambda e: titre.focus_set())
 
 for i, item in enumerate(tasks):
-    listbox.insert(tk.END, str(i + 1) + "- " + item["title"])
+    listbox.insert(tk.END, str(i + 1) + "- " + item["titulo"])
 listbox.insert(tk.END, "+")
 listbox.select_set(0)
 
@@ -354,55 +354,55 @@ B2 = tk.Button(cadre2, text="Excluir", command=lambda: removeTask(), font="Arial
 B2.grid(row=6, column=0, sticky="W", columnspan=2)
 
 ## Sobre
-AboutFrame = tk.Frame(fen)
+FrameSobre = tk.Frame(fen)
 
-built = tk.Label(AboutFrame, text="(2021-06 v.0.1)")
-copyRight = tk.Label(AboutFrame, text="Kelsen Lima")
-ttk.Separator(AboutFrame, orient=tk.HORIZONTAL).pack()
+built = tk.Label(FrameSobre, text="(2021-06 v.0.1)")
+copyRight = tk.Label(FrameSobre, text="Kelsen Lima")
+ttk.Separator(FrameSobre, orient=tk.HORIZONTAL).pack()
 built.pack()
 copyRight.pack()
-tk.Button(AboutFrame, text="Ocultar", anchor="w", command=about).pack(side="right")
+tk.Button(FrameSobre, text="Ocultar", anchor="w", command=about).pack(side="right")
 
 ## Ajuda
-HelpFrame = tk.Frame(fen)
-# tk.Label(HelpFrame, text="Help", font='Helvetica 18 bold').pack()
-# tk.Label(HelpFrame, text="TaskManager is simple Python application to manage tasks.").pack()
-# tk.Label(HelpFrame, text="The data are stored in JSON files.").pack()
-tk.Label(HelpFrame, text="Atalhos", font='Helvetica 18 bold').pack()
+FrameAjuda = tk.Frame(fen)
+# tk.Label(FrameAjuda, text="Help", font='Helvetica 18 bold').pack()
+# tk.Label(FrameAjuda, text="TaskManager is simple Python application to manage tasks.").pack()
+# tk.Label(FrameAjuda, text="The data are stored in JSON files.").pack()
+tk.Label(FrameAjuda, text="Atalhos", font='Helvetica 18 bold').pack()
 
-shortcutFrame = tk.Frame(HelpFrame)
+FrameAtalho = tk.Frame(FrameAjuda)
 
-tk.Label(shortcutFrame, text="<Ctrl>-<O>:", font="bold").grid(row=0, column=0, sticky="E")
-tk.Label(shortcutFrame, text=" Abra um arquivo").grid(row=0, column=1, sticky="W")
+tk.Label(FrameAtalho, text="<Ctrl>-<O>:", font="bold").grid(row=0, column=0, sticky="E")
+tk.Label(FrameAtalho, text=" Abra um arquivo").grid(row=0, column=1, sticky="W")
 
-tk.Label(shortcutFrame, text="<Ctrl>-<S>:", font="bold").grid(row=1, column=0, sticky="E")
-tk.Label(shortcutFrame, text=" Salve o arquivo atual").grid(row=1, column=1, sticky="W")
+tk.Label(FrameAtalho, text="<Ctrl>-<S>:", font="bold").grid(row=1, column=0, sticky="E")
+tk.Label(FrameAtalho, text=" Salve o arquivo atual").grid(row=1, column=1, sticky="W")
 
-tk.Label(shortcutFrame, text="<Ctrl>-<W>:", font="bold").grid(row=2, column=0, sticky="E")
-tk.Label(shortcutFrame, text=" Fechar arquivo atual").grid(row=2, column=1, sticky="W")
+tk.Label(FrameAtalho, text="<Ctrl>-<W>:", font="bold").grid(row=2, column=0, sticky="E")
+tk.Label(FrameAtalho, text=" Fechar arquivo atual").grid(row=2, column=1, sticky="W")
 
-tk.Label(shortcutFrame, text="<Ctrl>-<Q>:", font="bold").grid(row=3, column=0, sticky="E")
-tk.Label(shortcutFrame, text=" Sair").grid(row=3, column=1, sticky="W")
+tk.Label(FrameAtalho, text="<Ctrl>-<Q>:", font="bold").grid(row=3, column=0, sticky="E")
+tk.Label(FrameAtalho, text=" Sair").grid(row=3, column=1, sticky="W")
 
-tk.Label(shortcutFrame, text="<Alt>-<Up>:", font="bold").grid(row=4, column=0, sticky="E")
-tk.Label(shortcutFrame, text=" Selecione as tarefas anteriores (vá para cima na lista)").grid(row=4, column=1, sticky="W")
+tk.Label(FrameAtalho, text="<Alt>-<Up>:", font="bold").grid(row=4, column=0, sticky="E")
+tk.Label(FrameAtalho, text=" Selecione as tarefas anteriores (vá para cima na lista)").grid(row=4, column=1, sticky="W")
 
-tk.Label(shortcutFrame, text="<Alt>-<Down>:", font="bold").grid(row=5, column=0, sticky="E")
-tk.Label(shortcutFrame, text=" Selecione as próximas tarefas (vá para baixo na lista)").grid(row=5, column=1, sticky="W")
+tk.Label(FrameAtalho, text="<Alt>-<Down>:", font="bold").grid(row=5, column=0, sticky="E")
+tk.Label(FrameAtalho, text=" Selecione as próximas tarefas (vá para baixo na lista)").grid(row=5, column=1, sticky="W")
 
-tk.Label(shortcutFrame, text="<Alt>-<D>:", font="bold").grid(row=6, column=0, sticky="E")
-tk.Label(shortcutFrame, text=" Excluir tarefa selecionada").grid(row=6, column=1, sticky="W")
+tk.Label(FrameAtalho, text="<Alt>-<D>:", font="bold").grid(row=6, column=0, sticky="E")
+tk.Label(FrameAtalho, text=" Excluir tarefa selecionada").grid(row=6, column=1, sticky="W")
 
-tk.Label(shortcutFrame, text="<Atl>-<A>:", font="bold").grid(row=7, column=0, sticky="E")
-tk.Label(shortcutFrame, text=" Alternar quadro `Sobre`").grid(row=7, column=1, sticky="W")
+tk.Label(FrameAtalho, text="<Atl>-<A>:", font="bold").grid(row=7, column=0, sticky="E")
+tk.Label(FrameAtalho, text=" Alternar quadro `Sobre`").grid(row=7, column=1, sticky="W")
 
-tk.Label(shortcutFrame, text="<Atl>-<V>:", font="bold").grid(row=8, column=0, sticky="E")
-tk.Label(shortcutFrame, text=" Validar tarefa atual").grid(row=8, column=1, sticky="W")
+tk.Label(FrameAtalho, text="<Atl>-<V>:", font="bold").grid(row=8, column=0, sticky="E")
+tk.Label(FrameAtalho, text=" Validar tarefa atual").grid(row=8, column=1, sticky="W")
 
-tk.Label(shortcutFrame, text="<F1>:", font="bold").grid(row=9, column=0, sticky="E")
-tk.Label(shortcutFrame, text=" Alternar quadro `Ajuda` ").grid(row=9, column=1, sticky="W")
+tk.Label(FrameAtalho, text="<F1>:", font="bold").grid(row=9, column=0, sticky="E")
+tk.Label(FrameAtalho, text=" Alternar quadro `Ajuda` ").grid(row=9, column=1, sticky="W")
 
-shortcutFrame.pack()
+FrameAtalho.pack()
 prog.resizable(width=False, height=False)
 x = (prog.winfo_screenwidth() - prog.winfo_reqwidth()) / 2
 y = (prog.winfo_screenheight() - prog.winfo_reqheight()) / 2
