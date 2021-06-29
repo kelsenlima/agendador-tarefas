@@ -111,7 +111,7 @@ def openFile(event=None):
         listbox.select_set(0)
         if len(tasks) > 0:
             svt.set(tasks[0]["titulo"])
-            desc.delete(1.0, "final")
+            desc.delete(1.0, "end")
             desc.insert(1.0, tasks[0]["descricao"])
             dated.set_date(date.fromisoformat(tasks[0]["inicial"]))
             datef.set_date(date.fromisoformat(tasks[0]["final"]))
@@ -119,7 +119,7 @@ def openFile(event=None):
             B2["state"] = "normal"
         else:
             svt.set("")
-            desc.delete(1.0, "final")
+            desc.delete(1.0, "end")
             dated.set_date(date.today())
             datef.set_date(date.today())
             filemenu.entryconfigure(3, state="normal")
@@ -134,7 +134,7 @@ def onselect(event=None):
     curr = listbox.get(listbox.curselection())
     if curr == "+":
         svt.set(newTask["titulo"])
-        desc.delete(1.0, "final")
+        desc.delete(1.0, "end")
         desc.insert(1.0, newTask["descricao"])
         dated.set_date(date.today())
         datef.set_date(date.today())
@@ -144,7 +144,7 @@ def onselect(event=None):
         B2["state"] = "normal"
         if index < len(tasks):
             svt.set(tasks[index]["titulo"])
-            desc.delete(1.0, "final")
+            desc.delete(1.0, "end")
             desc.insert(1.0, tasks[index]["descricao"])
             dated.set_date(date.fromisoformat(tasks[index]["inicial"]))
             datef.set_date(date.fromisoformat(tasks[index]["final"]))
@@ -153,7 +153,7 @@ def onselect(event=None):
 def up(event=None):
     c = listbox.curselection()[0]
     if c > 0:
-        listbox.selection_clear(0, 'final')
+        listbox.selection_clear(0, 'end')
         listbox.select_set(c - 1)
         onselect()
 
@@ -162,7 +162,7 @@ def down(event=None):
     global tasks
     c = listbox.curselection()[0]
     if c < len(tasks):
-        listbox.selection_clear(0, 'final')
+        listbox.selection_clear(0, 'end')
         listbox.select_set(c + 1)
         onselect()
 
@@ -182,7 +182,7 @@ def closeFile(event=None):
     filemenu.entryconfigure(3, state="disabled")
     svt.set("")
     tasks = []
-    desc.delete(1.0, "final")
+    desc.delete(1.0, "end")
     listbox.delete(0, tk.END)
     listbox.insert(tk.END, "+")
     currFile = None
@@ -212,13 +212,13 @@ def removeTask(event=None):
     listbox.select_set(index - 1)
     if index - 1 >= len(tasks):
         svt.set("")
-        desc.delete(1.0, "final")
+        desc.delete(1.0, "end")
         dated.set_date(date.today())
         datef.set_date(date.today())
         B2["state"] = "disabled"
     else:
         svt.set(tasks[index - 1]["titulo"])
-        desc.delete(1.0, "final")
+        desc.delete(1.0, "end")
         desc.insert(1.0, tasks[index - 1]["descricao"])
         dated.set_date(date.fromisoformat(tasks[index - 1]["inicial"]))
         datef.set_date(date.fromisoformat(tasks[index - 1]["final"]))
@@ -365,9 +365,6 @@ tk.Button(FrameSobre, text="Ocultar", anchor="w", command=about).pack(side="righ
 
 ## Ajuda
 FrameAjuda = tk.Frame(fen)
-# tk.Label(FrameAjuda, text="Help", font='Helvetica 18 bold').pack()
-# tk.Label(FrameAjuda, text="TaskManager is simple Python application to manage tasks.").pack()
-# tk.Label(FrameAjuda, text="The data are stored in JSON files.").pack()
 tk.Label(FrameAjuda, text="Atalhos", font='Helvetica 18 bold').pack()
 
 FrameAtalho = tk.Frame(FrameAjuda)
